@@ -5,10 +5,7 @@ var options = {
 };
 var settings = { showMenu: false, version: 'options3' };
 var game = createGame();
-var players = {
-  p0: createPlayer(),
-  p1: createAIOpponent(),
-};
+var players = createDefaultPlayers();
 // <> <> DOM VARIABLES <> <> //
 //- buttons -//
 var buttonsLayer = document.querySelector('#buttons-layer');
@@ -24,6 +21,7 @@ buttonsLayer.addEventListener('click', handleButtonClick);
 // <> <> FUNCTIONS <> <> //
 //- prepare page functions -//
 function prepareDOM() {
+  createDefaultPlayers();
   addControllerButtonsDOM();
   updateplayerInfoDOM();
 }
@@ -109,9 +107,7 @@ function handleGameStateClick(id) {
   if (id === 'menu') {
     settings.showMenu = !settings.showMenu;
     showHideMenu();
-    return;
-  }
-  if (id === 'mode') {
+  } else if (id === 'mode') {
     if (settings.version === 'options3') {
       settings.version = 'options5';
     } else {
@@ -119,9 +115,24 @@ function handleGameStateClick(id) {
     }
 
     addControllerButtonsDOM();
+  } else {
+    game = createGame(game.version);
+    players = createDefaultPlayers();
+    if (settings.showMenu) {
+      showHideMenu();
+      settings.showMenu = false;
+    }
+    updateplayerInfoDOM();
   }
 }
 //- game logic functions -//
+function createDefaultPlayers() {
+  return {
+    p0: createPlayer(),
+    p1: createAIOpponent(),
+  };
+}
+
 function createPlayer(name = 'Hero', avatar = createAvatar(), wins = 0) {
   return {
     name,
