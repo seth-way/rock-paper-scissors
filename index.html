@@ -18,7 +18,47 @@
       <h1>SCISSORS</h1>
     </header>
     <main id="console">
-      <div id="buttons-layer"></div>
+      <div id="buttons-layer">
+        <form class="left-btns flex-center">
+          <div class="btn-grp-a flex-center">
+            <p>MENU</p>
+            <div id="menu" class="top-btn clickable"></div>
+          </div>
+          <div class="btn-choice-container flex-center">
+            <div class="btn-grp-b flex-center"></div>
+            <div class="btn-grp-c flex-center"></div>
+          </div>
+          <div id="d-pad" class="flex-center">
+            <div class="d-pad-btn clickable" id="d-up"></div>
+            <div>
+              <div class="d-pad-btn clickable" id="d-left"></div>
+              <div class="d-pad-btn clickable" id="d-right"></div>
+            </div>
+            <div class="d-pad-btn clickable" id="d-down"></div>
+          </div>
+        </form>
+        <form class="right-btns flex-center">
+          <div class="btn-grp-a right flex-center">
+            <p>RESET</p>
+            <div id="reset" class="top-btn clickable"></div>
+          </div>
+          <div class="btn-choice-container flex-center">
+            <div class="btn-grp-b flex-center"></div>
+            <div class="btn-grp-c flex-center"></div>
+          </div>
+          <div>
+            <img
+              id="speaker"
+              src="assets/other/speaker.svg"
+              alt="console speaker holes"
+            />
+            <div class="btn-grp-mode flex-center">
+              <div id="mode" class="clickable"></div>
+              <p>Mode</p>
+            </div>
+          </div>
+        </form>
+      </div>
       <div id="screen-layer" class="flex-center">
         <div id="screen-frame" class="flex-center">
           <box id="screen">
@@ -33,6 +73,6 @@
         </div>
       </div>
     </main>
-    <script type="text/javascript" src="src/main.js"></script>
+    <script type="text/javascript" src="main.js"></script>
   </body>
 </html>
