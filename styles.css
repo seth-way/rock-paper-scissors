@@ -118,6 +118,13 @@ h1:hover {
   border-right: thick solid var(--checker2);
   border-left: thick solid var(--checker2);
   transition: all 2s ease-in-out;
+
+  & > h2,
+  & > h3 {
+    background: color-mix(in srgb, var(--checker1) 85%, transparent);
+    border-radius: 10%;
+    padding: 2%;
+  }
 }
 
 #game {
@@ -259,7 +266,7 @@ form.flex-center {
     }
   }
 }
-
+/* d-pad */
 #d-pad.flex-center {
   height: 25%;
   aspect-ratio: 1/1;
