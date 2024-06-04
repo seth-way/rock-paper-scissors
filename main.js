@@ -1,8 +1,11 @@
 // <> <> GLOBAL VARIABLES <> <> //
 var options3 = ['rock', 'paper', 'scissors'];
 var options5 = ['rock', 'paper', 'scissors', 'banana', 'bow-arrow'];
-var game = { options: options5 };
-var players;
+var game = createGame();
+var players = {
+  p0: createPlayer(),
+  p1: createAIOpponent(),
+};
 // <> <> DOM VARIABLES <> <> //
 //- buttons -//
 var buttonsLayer = document.querySelector('#buttons-layer');
@@ -42,4 +45,41 @@ function createChoiceElement(choice, player) {
   if (player === 1) optionImage.classList.add('right-side');
   optionImage.dsc = `${choice} emoji`;
   return optionImage;
+}
+
+function createAvatar(avatarType = 'default') {
+  const avatar = document.createElement('img');
+  avatar.type = avatarType;
+  avatar.classList.add('avatar');
+  avatar.src = `assets/avatar-emojis/${avatarType}.svg`;
+  avatar.alt = `${avatarType} avatar emoji`;
+  return avatar;
+}
+//- game logic functions -//
+function createPlayer(name = 'Hero', avatar = createAvatar(), wins = 0) {
+  return {
+    name,
+    avatar,
+    wins,
+  };
+}
+
+function createAIOpponent() {
+  return {
+    name: 'RPS-A-Bot',
+    avatar: createAvatar('robot'),
+    wins: 0,
+    ai: true,
+  };
+}
+
+function createGame(options = options3) {
+  return {
+    choices: {
+      p0: null,
+      p1: null,
+    },
+    outcome: null,
+    options,
+  };
 }
