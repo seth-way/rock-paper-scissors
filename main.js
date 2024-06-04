@@ -13,6 +13,7 @@ var buttonGroupB = document.querySelectorAll('.btn-grp-b');
 var buttonGroupC = document.querySelectorAll('.btn-grp-c');
 //- containers -//
 var playerInfoAreas = document.querySelectorAll('.player-info');
+var gameArea = document.querySelector('#game');
 // <> <> EVENT LISTENERS <> <> //
 //- load -//
 window.addEventListener('load', prepareDOM);
@@ -24,6 +25,7 @@ function prepareDOM() {
   createDefaultPlayers();
   addControllerButtonsDOM();
   updateplayerInfoDOM();
+  addPlayerSelectionsDOM();
 }
 //- update DOM functions -//
 function addControllerButtonsDOM() {
@@ -46,7 +48,7 @@ function addControllerButtonsDOM() {
 }
 
 function updateplayerInfoDOM() {
-  playerInfoAreas.forEach((area, idx) => {
+  playerInfoAreas.forEach(function (area, idx) {
     area.innerHTML = '';
     const player = players[`p${idx}`];
 
@@ -65,18 +67,36 @@ function showHideMenu() {
     area.classList.toggle('hide');
   });
 }
+
+function addPlayerSelectionsDOM(selection0, selection1, animations) {
+  game.emojisOnDOM.forEach(function (element) {
+    gameArea.removeChild(element);
+  });
+
+  if (!selection0) selection0 = options[settings.version][0];
+  if (!selection1) selection1 = options[settings.version][0];
+  var p0Selection = createChoiceElement(selection0, 0, animations || ['ready']);
+  var p1Selection = createChoiceElement(selection1, 1, animations || ['ready']);
+  p0Selection.id += '-battle';
+  p1Selection.id += '-battle';
+  gameArea.appendChild(p0Selection);
+  gameArea.appendChild(p1Selection);
+  game.emojisOnDOM = [p0Selection, p1Selection];
+}
 //- create new element functions -//
-function createChoiceElement(choice, player) {
+function createChoiceElement(choice, player, animations) {
   const optionImage = document.createElement('img');
+  optionImage.id = `${choice}-${player}`;
   optionImage.src = `assets/choices/${choice}.svg`;
+  if (animations) optionImage.classList.add(...animations);
   if (player === 1) optionImage.classList.add('right-side');
-  optionImage.dsc = `${choice} emoji`;
+  optionImage.alt = `${choice} emoji`;
   return optionImage;
 }
 
 function createAvatar(avatarType = 'default') {
   const avatar = document.createElement('img');
-  avatar.type = avatarType;
+  // avatar.type = avatarType;
   avatar.classList.add('avatar');
   avatar.src = `assets/avatars/${avatarType}.svg`;
   avatar.alt = `${avatarType} avatar emoji`;
@@ -85,6 +105,7 @@ function createAvatar(avatarType = 'default') {
 //- click handler functions -//
 function handleButtonClick(e) {
   e.preventDefault();
+  console.log(e.target);
   let targetID;
   if (e.target.tagName === 'IMG' || e.target.tagName === 'BUTTON') {
     targetID = e.target.closest('button').id;
@@ -101,7 +122,9 @@ function handleButtonClick(e) {
 
 function handleUserChoiceClick(id) {}
 
-function handleDPadClick(id) {}
+function handleDPadClick(id) {
+  console.log('d-pad clicked.', id);
+}
 
 function handleGameStateClick(id) {
   if (id === 'menu') {
@@ -123,6 +146,7 @@ function handleGameStateClick(id) {
       settings.showMenu = false;
     }
     updateplayerInfoDOM();
+    addPlayerSelectionsDOM();
   }
 }
 //- game logic functions -//
@@ -157,6 +181,7 @@ function createGame(version) {
       p0: null,
       p1: null,
     },
+    emojisOnDOM: [],
     outcome: null,
   };
 }
