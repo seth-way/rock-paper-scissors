@@ -1,6 +1,9 @@
 // <> <> GLOBAL VARIABLES <> <> //
-var options3 = ['rock', 'paper', 'scissors'];
-var options5 = ['rock', 'paper', 'scissors', 'banana', 'bow-arrow'];
+var options = {
+  options3: ['rock', 'paper', 'scissors'],
+  options5: ['rock', 'paper', 'scissors', 'banana', 'bow-arrow'],
+};
+var settings = { showMenu: false, version: 'options3' };
 var game = createGame();
 var players = {
   p0: createPlayer(),
@@ -16,6 +19,8 @@ var playerInfoAreas = document.querySelectorAll('.player-info');
 // <> <> EVENT LISTENERS <> <> //
 //- load -//
 window.addEventListener('load', prepareDOM);
+//- click -//
+buttonsLayer.addEventListener('click', handleButtonClick);
 // <> <> FUNCTIONS <> <> //
 //- prepare page functions -//
 function prepareDOM() {
@@ -27,7 +32,7 @@ function addControllerButtonsDOM() {
   buttonGroupB.forEach(function (buttonGroup, idx) {
     buttonGroupB[idx].innerHTML = '';
     buttonGroupC[idx].innerHTML = '';
-    game.options.forEach(function (option, optionIdx) {
+    options[settings.version].forEach(function (option, optionIdx) {
       const buttonElement = document.createElement('button');
       buttonElement.id = `${option}-${idx}`;
       if (idx === 1) buttonElement.classList.add('right-side');
@@ -56,6 +61,12 @@ function updateplayerInfoDOM() {
     area.append(player.avatar, playerTitle, playerWins);
   });
 }
+
+function showHideMenu() {
+  playerInfoAreas.forEach(function (area) {
+    area.classList.toggle('hide');
+  });
+}
 //- create new element functions -//
 function createChoiceElement(choice, player) {
   const optionImage = document.createElement('img');
@@ -72,6 +83,43 @@ function createAvatar(avatarType = 'default') {
   avatar.src = `assets/avatars/${avatarType}.svg`;
   avatar.alt = `${avatarType} avatar emoji`;
   return avatar;
+}
+//- click handler functions -//
+function handleButtonClick(e) {
+  e.preventDefault();
+  let targetID;
+  if (e.target.tagName === 'IMG' || e.target.tagName === 'BUTTON') {
+    targetID = e.target.closest('button').id;
+    handleUserChoiceClick(targetID);
+  } else if (e.target.classList.contains('clickable')) {
+    targetID = e.target.id;
+    if (targetID.startsWith('d-')) {
+      handleDPadClick(targetID);
+    } else {
+      handleGameStateClick(targetID);
+    }
+  }
+}
+
+function handleUserChoiceClick(id) {}
+
+function handleDPadClick(id) {}
+
+function handleGameStateClick(id) {
+  if (id === 'menu') {
+    settings.showMenu = !settings.showMenu;
+    showHideMenu();
+    return;
+  }
+  if (id === 'mode') {
+    if (settings.version === 'options3') {
+      settings.version = 'options5';
+    } else {
+      settings.version = 'options3';
+    }
+
+    addControllerButtonsDOM();
+  }
 }
 //- game logic functions -//
 function createPlayer(name = 'Hero', avatar = createAvatar(), wins = 0) {
@@ -91,13 +139,13 @@ function createAIOpponent() {
   };
 }
 
-function createGame(options = options3) {
+function createGame(version) {
+  if (!version) version = { options3: true, options5: false };
   return {
-    choices: {
+    selected: {
       p0: null,
       p1: null,
     },
     outcome: null,
-    options,
   };
 }

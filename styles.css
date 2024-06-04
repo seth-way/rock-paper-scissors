@@ -42,10 +42,10 @@ h1:hover {
   color: red;
   scale: 1.3;
   &:first-child {
-    rotate: -5deg;
+    rotate: -365deg;
   }
   &:last-child {
-    rotate: 5deg;
+    rotate: 365deg;
   }
 }
 /*<><> Console <><>*/
@@ -133,14 +133,21 @@ p {
   border-right: thick solid var(--checker2);
   border-left: thick solid var(--checker2);
   transition: all 2s ease-in-out;
-
   & > h2,
   & > h3 {
     background: color-mix(in srgb, var(--checker1) 85%, transparent);
     border-radius: 10%;
     padding: 2%;
   }
+  &.hide {
+    transform: translateX(-110%);
+
+    &:last-child {
+      transform: translateX(110%);
+    }
+  }
 }
+
 /* gameplay area */
 #game {
   width: 100%;
@@ -183,7 +190,6 @@ form.flex-center {
   height: 100%;
   font-size: 1.1em;
   border-radius: 30px 0 0 30px;
-
   &.right-btns {
     border-radius: 0 30px 30px 0;
   }
@@ -195,7 +201,6 @@ form.flex-center {
   flex-direction: column;
   justify-content: center;
   margin-right: 5%;
-
   &.right {
     margin-right: -5%;
   }
@@ -226,24 +231,19 @@ form.flex-center {
 .btn-grp-b > button {
   height: 40%;
   background: yellow;
-
   &:first-child {
     align-self: flex-start;
     background: red;
   }
-
   &:last-child {
     align-self: flex-end;
     background: blue;
   }
-
   &.right-side {
     transform: scaleX(-1);
-
     &:first-child {
       align-self: flex-end;
     }
-
     &:last-child {
       align-self: flex-start;
     }
@@ -265,23 +265,18 @@ form.flex-center {
   pointer-events: auto;
   height: 32%;
   background: green;
-
   &:first-child {
     margin-left: 46%;
   }
-
   &:last-child {
     margin-right: 46%;
     background: pink;
   }
-
   &.right-side {
     transform: scaleX(-1);
-
     &:first-child {
       margin-left: -46%;
     }
-
     &:last-child {
       margin-right: -46%;
     }
@@ -303,7 +298,6 @@ form.flex-center {
 
 #d-pad > div {
   height: 33.34%;
-
   &:nth-child(2) {
     width: 100%;
     display: flex;
