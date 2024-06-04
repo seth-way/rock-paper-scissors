@@ -53,6 +53,15 @@ h1:hover {
   border-radius: 30px;
   box-shadow: -0.5em 0.5em 0.5em 0.5em rgba(0, 0, 0, 0.3);
 }
+
+h2 {
+  font-size: 1em;
+}
+
+p {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
 /*<><> Screen <><>*/
 #screen-layer,
 #buttons-layer {
@@ -126,7 +135,7 @@ h1:hover {
     padding: 2%;
   }
 }
-
+/* gameplay area */
 #game {
   width: 100%;
 }
@@ -138,6 +147,12 @@ h1:hover {
 #ground {
   height: 15%;
   background-color: var(--checker1);
+  background-image: linear-gradient(45deg, var(--checker2) 25%, transparent 25%),
+    linear-gradient(135deg, var(--checker2) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--checker2) 75%),
+    linear-gradient(135deg, transparent 75%, var(--checker2) 75%);
+  background-position: 0 0, 1em 0, 1em -1em, 0 -1em;
+  background-size: 2em 2em;
   border-top: thick var(--grass-green) solid;
 }
 /*<><> Buttons <><>*/
