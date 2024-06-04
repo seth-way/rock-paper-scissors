@@ -9,9 +9,30 @@
       rel="stylesheet"
     />
   </head>
-  <body>
-    <header>ROCK · PAPER · SCISSORS</header>
-    <main></main>
+  <body class="flex-center">
+    <header class="flex-center">
+      <h1>ROCK</h1>
+      ·
+      <h1>PAPER</h1>
+      ·
+      <h1>SCISSORS</h1>
+    </header>
+    <main id="console">
+      <div id="buttons-layer"></div>
+      <div id="screen-layer" class="flex-center">
+        <div id="screen-frame" class="flex-center">
+          <box id="screen">
+            <div id="screen-background">
+              <div id="sky"></div>
+              <div id="ground"></div>
+            </div>
+            <aside class="player-info flex-center"></aside>
+            <div id="game"></div>
+            <aside class="player-info flex-center"></aside>
+          </box>
+        </div>
+      </div>
+    </main>
     <script type="text/javascript" src="src/main.js"></script>
   </body>
 </html>
