@@ -11,16 +11,19 @@ var players = {
 var buttonsLayer = document.querySelector('#buttons-layer');
 var buttonGroupB = document.querySelectorAll('.btn-grp-b');
 var buttonGroupC = document.querySelectorAll('.btn-grp-c');
+//- containers -//
+var playerInfoAreas = document.querySelectorAll('.player-info');
 // <> <> EVENT LISTENERS <> <> //
 //- load -//
 window.addEventListener('load', prepareDOM);
 // <> <> FUNCTIONS <> <> //
 //- prepare page functions -//
 function prepareDOM() {
-  addControllerButtonsToDOM();
+  addControllerButtonsDOM();
+  updateplayerInfoDOM();
 }
-
-function addControllerButtonsToDOM() {
+//- update DOM functions -//
+function addControllerButtonsDOM() {
   buttonGroupB.forEach(function (buttonGroup, idx) {
     buttonGroupB[idx].innerHTML = '';
     buttonGroupC[idx].innerHTML = '';
@@ -38,6 +41,21 @@ function addControllerButtonsToDOM() {
     });
   });
 }
+
+function updateplayerInfoDOM() {
+  playerInfoAreas.forEach((area, idx) => {
+    area.innerHTML = '';
+    const player = players[`p${idx}`];
+
+    const playerTitle = document.createElement('h2');
+    playerTitle.innerText = player.name;
+
+    const playerWins = document.createElement('h3');
+    playerWins.innerHTML = `<u>Wins:</u><br>${player.wins}`;
+
+    area.append(player.avatar, playerTitle, playerWins);
+  });
+}
 //- create new element functions -//
 function createChoiceElement(choice, player) {
   const optionImage = document.createElement('img');
@@ -51,7 +69,7 @@ function createAvatar(avatarType = 'default') {
   const avatar = document.createElement('img');
   avatar.type = avatarType;
   avatar.classList.add('avatar');
-  avatar.src = `assets/avatar-emojis/${avatarType}.svg`;
+  avatar.src = `assets/avatars/${avatarType}.svg`;
   avatar.alt = `${avatarType} avatar emoji`;
   return avatar;
 }
