@@ -69,6 +69,9 @@ h1:hover {
   min-width: 700px;
   border-radius: 30px;
   box-shadow: -0.5em 0.5em 0.5em 0.5em rgba(0, 0, 0, 0.3);
+  &.flip {
+    animation: 1s ease-in-out 1 flip;
+  }
 }
 
 button,
@@ -79,6 +82,14 @@ button,
     cursor: pointer;
     transform: scale(1.1);
     filter: brightness(150%);
+  }
+  &.disable {
+    filter: grayscale(0.5);
+    mouse-events: none;
+    &:hover {
+      cursor: not-allowed;
+      transform: none;
+    }
   }
 }
 
@@ -183,12 +194,20 @@ p {
 
 #game > img {
   height: 40%;
-  transition: opacity 2s ease-in-out;
+  transition: opacity 0.4s ease-in-out;
 }
 
 img.ready {
   animation: 1.5s ease-in-out 0s 1 both appearFromLeft,
     1.5s linear 1.6s infinite bounce;
+}
+
+img.pre-battle {
+  animation: 0.5s ease-in-out 0s 3 both preBattle;
+}
+
+img.attack {
+  animation: 0.5s ease-in-out 1 both appearFromLeft;
 }
 /* targets all p1 game battle emojis */
 [id$='1-battle'] {
@@ -196,6 +215,9 @@ img.ready {
   &.ready {
     animation: 1.5s ease-in-out 0s 1 both appearFromRight,
       1.5s linear 1.6s infinite reverse bounce;
+  }
+  &.attack {
+    animation: 0.5s ease-in-out 1 both appearFromRight;
   }
 }
 
@@ -211,7 +233,7 @@ img.ready {
 }
 
 #sky > * {
-  transition: opacity 1s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 
 #ground {
@@ -244,7 +266,8 @@ button {
   pointer-events: none;
 }
 
-form.flex-center {
+.left-btns,
+.right-btns {
   pointer-events: auto;
   flex-direction: column;
   width: 21%;
@@ -406,35 +429,16 @@ form.flex-center {
     scale: 1.1;
     animation: wiggle 2s linear infinite alternate;
   }
+  &.victory {
+    /* scale: 1.3; */
+    animation: 1s ease-in-out 3 victory;
+  }
+  &.defeat {
+    animation: 3s linear 1 defeat;
+  }
 }
 /*<><> Animations <><>*/
-@keyframes wiggle {
-  0%,
-  10%,
-  20%,
-  30%,
-  40% {
-    transform: rotate(0);
-  }
-  40%,
-  50%,
-  60%,
-  70%,
-  80% {
-    transform: rotate(5deg);
-  }
-  45%,
-  55%,
-  65%,
-  75%,
-  85% {
-    transform: rotate(-5deg);
-  }
-  100% {
-    transform: rotate(0);
-  }
-}
-
+/* choice animations */
 @keyframes appearFromLeft {
   0% {
     translate: -180%;
@@ -466,18 +470,99 @@ form.flex-center {
 
 @keyframes bounce {
   0% {
-    translate: inherit;
+    translate: 0 0;
   }
   25% {
     translate: -15% -10%;
   }
   50% {
-    translate: inherit;
+    translate: 0 0;
   }
   75% {
     translate: 15% -10%;
   }
   100% {
-    translate: initial;
+    translate: 0 0;
+  }
+}
+
+@keyframes preBattle {
+  0% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -10%;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+/* emoji animations */
+@keyframes victory {
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+
+@keyframes defeat {
+  0% {
+    transform: scale(1);
+  }
+  98% {
+    transform: scale(1.3, 0.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  10%,
+  20%,
+  30%,
+  40% {
+    transform: rotate(0);
+  }
+  40%,
+  50%,
+  60%,
+  70%,
+  80% {
+    transform: rotate(5deg);
+  }
+  45%,
+  55%,
+  65%,
+  75%,
+  85% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+/* console animations */
+@keyframes flip {
+  0% {
+    transform: scaleY(1);
+    filter: contrast(1);
+  }
+  35% {
+    filter: contrast(0);
+  }
+  50% {
+    transform: scaleY(-1);
+    filter: contrast(0);
+  }
+  65% {
+    filter: contrast(0);
+  }
+  100% {
+    transform: scaleY(1);
+    filter: contrast(1);
   }
 }

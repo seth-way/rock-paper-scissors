@@ -9,7 +9,7 @@ var winMessage = {
   paper: { rock: 'Paper covers Rock', spock: 'Paper disproves Spock' },
   scissors: {
     paper: 'Scissors cut Paper',
-    lizard: 'Scissors decapitates Lizard',
+    lizard: 'Scissors decapitate Lizard',
   },
   spock: { rock: 'Spock vaporizes Rock', scissors: 'Spock smashes Scissors' },
   lizard: { paper: 'Lizard eats Paper', spock: 'Lizard poisons Spock' },
@@ -22,11 +22,11 @@ var buttonsLayer = document.querySelector('#buttons-layer');
 var buttonGroupB = document.querySelectorAll('.btn-grp-b');
 var buttonGroupC = document.querySelectorAll('.btn-grp-c');
 //- containers -//
+var device = document.querySelector('#console');
 var playerInfoAreas = document.querySelectorAll('.player-info');
 var gameArea = document.querySelector('#game');
 var gameHeading = document.querySelector('#sky').querySelector('h3');
 var gameInfo = document.querySelector('#sky').querySelector('p');
-console.log(gameHeading);
 // <> <> EVENT LISTENERS <> <> //
 //- load -//
 window.addEventListener('load', prepareDOM);
@@ -35,6 +35,7 @@ buttonsLayer.addEventListener('click', handleButtonClick);
 // <> <> FUNCTIONS <> <> //
 //- prepare page functions -//
 function prepareDOM() {
+  updateGameMessages();
   createDefaultPlayers();
   addControllerButtonsDOM();
   updateplayerInfoDOM();
@@ -48,7 +49,10 @@ function addControllerButtonsDOM() {
     options[settings.version].forEach(function (option, optionIdx) {
       const buttonElement = document.createElement('button');
       buttonElement.id = `${option}-${idx}`;
-      if (idx === 1) buttonElement.classList.add('right-side');
+      if (idx === 1) {
+        buttonElement.classList.add('right-side');
+        if (settings.onePlayer) buttonElement.classList.add('disable');
+      }
       const buttonImage = createChoiceElement(option, idx);
       buttonElement.appendChild(buttonImage);
       if (optionIdx < 3) {
@@ -100,15 +104,60 @@ function addPlayerSelectionsDOM(selection0, selection1, animations) {
   game.emojisOnDOM = [p0Selection, p1Selection];
 }
 
-async function updateGameMessages(heading = '', info = '') {
+async function updateGameMessages(heading = 'Choose Your Weapon.', info = '') {
   gameHeading.classList.add('fade-out');
   gameInfo.classList.add('fade-out');
-  await pauseForCSSTransition(1);
+  await pauseForCSSTransition(0.5);
   gameHeading.innerText = heading;
   gameInfo.innerText = info;
   gameHeading.classList.remove('fade-out');
   gameInfo.classList.remove('fade-out');
-  return await pauseForCSSTransition(1);
+  return await pauseForCSSTransition(0.5);
+}
+
+async function runBattleAnimations() {
+  game.emojisOnDOM.forEach(function (emoji) {
+    emoji.classList.remove('ready');
+    emoji.classList.add('pre-battle');
+  });
+  await pauseForCSSTransition(1.5);
+  game.emojisOnDOM.forEach(function (emoji) {
+    emoji.classList.remove('pre-battle');
+    emoji.classList.add('fade-out');
+  });
+  await pauseForCSSTransition(0.4);
+  await addPlayerSelectionsDOM(game.selected.p0, game.selected.p1, ['attack']);
+  await runResultsAnimations();
+}
+
+async function runResultsAnimations() {
+  if (game.winner) {
+    await updateGameMessages(
+      `${players[game.winner].name} wins!`,
+      game.message
+    );
+    updateplayerInfoDOM();
+    const winner = Number(game.winner.slice(-1));
+    playerInfoAreas.forEach(function (area, idx) {
+      let avatar = area.querySelector('img');
+      if (idx === winner) {
+        avatar.classList.add('victory');
+      } else {
+        avatar.classList.add('defeat');
+      }
+    });
+    await pauseForCSSTransition(3);
+    playerInfoAreas.forEach(function (area) {
+      const avatar = area.querySelector('img');
+      avatar.classList.remove('victory', 'defeat');
+    });
+  } else {
+    await updateGameMessages(game.message);
+    await pauseForCSSTransition(1.5);
+  }
+  await updateGameMessages();
+  game = createGame();
+  addPlayerSelectionsDOM();
 }
 //- create new element functions -//
 function createChoiceElement(choice, player, animations) {
@@ -159,20 +208,8 @@ async function handleUserChoiceClick(id) {
 
   if (assessGameCompletion()) {
     determineOutcome(game.selected.p0, game.selected.p1);
-    game.emojisOnDOM.forEach(function (emoji) {
-      emoji.classList.remove('ready');
-    });
-
     await updateGameMessages('Get Ready...');
-    if (!game.winner) {
-      await updateGameMessages(game.message);
-    } else {
-      await updateGameMessages(
-        `${players[game.winner].name} wins!`,
-        game.message
-      );
-      updateplayerInfoDOM();
-    }
+    await runBattleAnimations();
   }
 }
 
@@ -180,7 +217,7 @@ function handleDPadClick(id) {
   console.log('d-pad clicked.', id);
 }
 
-function handleGameStateClick(id) {
+async function handleGameStateClick(id) {
   if (id === 'menu') {
     settings.showMenu = !settings.showMenu;
     showHideMenu();
@@ -190,8 +227,11 @@ function handleGameStateClick(id) {
     } else {
       settings.version = 'options3';
     }
-
+    device.classList.add('flip');
+    await pauseForCSSTransition(0.5);
     addControllerButtonsDOM();
+    await pauseForCSSTransition(0.5);
+    device.classList.remove('flip');
   } else {
     game = createGame(game.version);
     players = createDefaultPlayers();
@@ -220,14 +260,15 @@ function createPlayer(name = 'Hero', avatar = createAvatar(), wins = 0) {
   };
 }
 
-function createGame(version) {
-  if (!version) version = { options3: true, options5: false };
+function createGame() {
+  let emojisOnDOM = [];
+  if (game) emojisOnDOM = game.emojisOnDOM;
   return {
     selected: {
       p0: null,
       p1: null,
     },
-    emojisOnDOM: [],
+    emojisOnDOM,
     winner: null,
     message: null,
   };
