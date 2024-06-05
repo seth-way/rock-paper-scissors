@@ -1,9 +1,19 @@
 // <> <> GLOBAL VARIABLES <> <> //
 var options = {
   options3: ['rock', 'paper', 'scissors'],
-  options5: ['rock', 'paper', 'scissors', 'banana', 'bow-arrow'],
+  options5: ['rock', 'paper', 'scissors', 'spock', 'lizard'],
 };
-var settings = { showMenu: false, version: 'options3' };
+var settings = { showMenu: false, version: 'options3', onePlayer: true };
+var winMessage = {
+  rock: { scissors: 'Rock crushes Scissors', lizard: 'Rock crushes Lizard' },
+  paper: { rock: 'Paper covers Rock', spock: 'Paper disproves Spock' },
+  scissors: {
+    paper: 'Scissors cut Paper',
+    lizard: 'Scissors decapitates Lizard',
+  },
+  spock: { rock: 'Spock vaporizes Rock', scissors: 'Spock smashes Scissors' },
+  lizard: { paper: 'Lizard eats Paper', spock: 'Lizard poisons Spock' },
+};
 var game = createGame();
 var players = createDefaultPlayers();
 // <> <> DOM VARIABLES <> <> //
@@ -14,6 +24,9 @@ var buttonGroupC = document.querySelectorAll('.btn-grp-c');
 //- containers -//
 var playerInfoAreas = document.querySelectorAll('.player-info');
 var gameArea = document.querySelector('#game');
+var gameHeading = document.querySelector('#sky').querySelector('h3');
+var gameInfo = document.querySelector('#sky').querySelector('p');
+console.log(gameHeading);
 // <> <> EVENT LISTENERS <> <> //
 //- load -//
 window.addEventListener('load', prepareDOM);
@@ -86,6 +99,17 @@ function addPlayerSelectionsDOM(selection0, selection1, animations) {
   gameArea.appendChild(p1Selection);
   game.emojisOnDOM = [p0Selection, p1Selection];
 }
+
+async function updateGameMessages(heading = '', info = '') {
+  gameHeading.classList.add('fade-out');
+  gameInfo.classList.add('fade-out');
+  await pauseForCSSTransition(1);
+  gameHeading.innerText = heading;
+  gameInfo.innerText = info;
+  gameHeading.classList.remove('fade-out');
+  gameInfo.classList.remove('fade-out');
+  return await pauseForCSSTransition(1);
+}
 //- create new element functions -//
 function createChoiceElement(choice, player, animations) {
   const optionImage = document.createElement('img');
@@ -108,7 +132,6 @@ function createAvatar(avatarType = 'default') {
 //- click handler functions -//
 function handleButtonClick(e) {
   e.preventDefault();
-  console.log(e.target);
   let targetID;
   if (e.target.tagName === 'IMG' || e.target.tagName === 'BUTTON') {
     targetID = e.target.closest('button').id;
@@ -123,7 +146,35 @@ function handleButtonClick(e) {
   }
 }
 
-function handleUserChoiceClick(id) {}
+async function handleUserChoiceClick(id) {
+  if (game.message || settings.showMenu) return;
+
+  const player = Number(id.slice(-1));
+
+  if (player === 1 && settings.onePlayer) return;
+  if (game.selected[`p${player}`]) return;
+
+  const choice = id.slice(0, id.length - 2);
+  game.selected[`p${player}`] = choice;
+
+  if (assessGameCompletion()) {
+    determineOutcome(game.selected.p0, game.selected.p1);
+    game.emojisOnDOM.forEach(function (emoji) {
+      emoji.classList.remove('ready');
+    });
+
+    await updateGameMessages('Get Ready...');
+    if (!game.winner) {
+      await updateGameMessages(game.message);
+    } else {
+      await updateGameMessages(
+        `${players[game.winner].name} wins!`,
+        game.message
+      );
+      updateplayerInfoDOM();
+    }
+  }
+}
 
 function handleDPadClick(id) {
   console.log('d-pad clicked.', id);
@@ -157,7 +208,7 @@ function handleGameStateClick(id) {
 function createDefaultPlayers() {
   return {
     p0: createPlayer(),
-    p1: createAIOpponent(),
+    p1: createPlayer('RPS-A-Bot', createAvatar('robot')),
   };
 }
 
@@ -169,15 +220,6 @@ function createPlayer(name = 'Hero', avatar = createAvatar(), wins = 0) {
   };
 }
 
-function createAIOpponent() {
-  return {
-    name: 'RPS-A-Bot',
-    avatar: createAvatar('robot'),
-    wins: 0,
-    ai: true,
-  };
-}
-
 function createGame(version) {
   if (!version) version = { options3: true, options5: false };
   return {
@@ -186,6 +228,51 @@ function createGame(version) {
       p1: null,
     },
     emojisOnDOM: [],
-    outcome: null,
+    winner: null,
+    message: null,
   };
+}
+
+function assessGameCompletion() {
+  if (game.selected.p0) {
+    if (game.selected.p1) {
+      return true;
+    }
+
+    if (settings.onePlayer) {
+      game.selected.p1 = getRandomChoice();
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function getRandomChoice() {
+  const choices = options[settings.version];
+  return choices[Math.floor(Math.random() * choices.length)];
+}
+
+function determineOutcome(choice0, choice1) {
+  if (game.selected.p0 === game.selected.p1) {
+    game.message = "It's a Draw!";
+  } else {
+    game.message = winMessage[choice0][choice1];
+    if (game.message) {
+      game.winner = 'p0';
+    } else {
+      game.message = winMessage[choice1][choice0];
+      game.winner = 'p1';
+    }
+    players[game.winner].wins += 1;
+  }
+}
+
+//- other functions -//
+function pauseForCSSTransition(miliseconds) {
+  return new Promise(resolve =>
+    setTimeout(() => {
+      resolve();
+    }, miliseconds * 1000)
+  );
 }

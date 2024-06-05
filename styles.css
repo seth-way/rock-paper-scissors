@@ -183,13 +183,17 @@ p {
 
 #game > img {
   height: 40%;
-  transition: all 2s ease-in-out;
+  transition: opacity 2s ease-in-out;
 }
 
 img.ready {
   animation: 1.5s ease-in-out 0s 1 both appearFromLeft,
     1.5s linear 1.6s infinite bounce;
-  &.right-side {
+}
+/* targets all p1 game battle emojis */
+[id$='1-battle'] {
+  transform: scaleX(-1);
+  &.ready {
     animation: 1.5s ease-in-out 0s 1 both appearFromRight,
       1.5s linear 1.6s infinite reverse bounce;
   }
@@ -206,8 +210,8 @@ img.ready {
   flex-direction: column;
 }
 
-#sky > p {
-  word-spacing: 0.6em;
+#sky > * {
+  transition: opacity 1s ease-in-out;
 }
 
 #ground {
@@ -448,6 +452,15 @@ form.flex-center {
   100% {
     translate: 0%;
     transform: scaleX(-1);
+  }
+}
+
+@keyframes appearFromAbove {
+  0% {
+    translate: 0 -180%;
+  }
+  100% {
+    translate: 0 0;
   }
 }
 
