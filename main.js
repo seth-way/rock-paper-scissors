@@ -141,6 +141,7 @@ function handleGameStateClick(id) {
   } else {
     game = createGame(game.version);
     players = createDefaultPlayers();
+    gameArea.innerHTML = '';
     if (settings.showMenu) {
       showHideMenu();
       settings.showMenu = false;

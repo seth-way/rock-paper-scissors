@@ -60,6 +60,16 @@ h1:hover {
   box-shadow: -0.5em 0.5em 0.5em 0.5em rgba(0, 0, 0, 0.3);
 }
 
+button,
+.clickable {
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    filter: brightness(150%);
+  }
+}
+
 h2 {
   font-size: 1em;
 }
@@ -149,14 +159,22 @@ p {
 }
 
 /* gameplay area */
-#game {
+#game.flex-center {
   width: 100%;
+  justify-content: space-around;
+  transition: 2s ease-in-out;
 }
 
 #game > img {
   height: 40%;
+}
+
+img.ready {
+  animation: 1.5s ease-in-out 0s 1 both appearFromLeft,
+    1.5s linear 1.6s infinite bounce;
   &.right-side {
-    transform: scaleX(-1);
+    animation: 1.5s ease-in-out 0s 1 both appearFromRight,
+      1.5s linear 1.6s infinite reverse bounce;
   }
 }
 
@@ -377,5 +395,43 @@ form.flex-center {
   }
   100% {
     transform: rotate(0);
+  }
+}
+
+@keyframes appearFromLeft {
+  0% {
+    translate: -180%;
+  }
+  100% {
+    translate: 0%;
+  }
+}
+
+@keyframes appearFromRight {
+  0% {
+    translate: 180%;
+    transform: scaleX(-1);
+  }
+  100% {
+    translate: 0%;
+    transform: scaleX(-1);
+  }
+}
+
+@keyframes bounce {
+  0% {
+    translate: inherit;
+  }
+  25% {
+    translate: -15% -10%;
+  }
+  50% {
+    translate: inherit;
+  }
+  75% {
+    translate: 15% -10%;
+  }
+  100% {
+    translate: initial;
   }
 }
