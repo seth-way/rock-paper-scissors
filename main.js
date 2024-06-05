@@ -66,6 +66,9 @@ function showHideMenu() {
   playerInfoAreas.forEach(function (area) {
     area.classList.toggle('hide');
   });
+  game.emojisOnDOM.forEach(function (emoji) {
+    emoji.classList.toggle('fade-out');
+  });
 }
 
 function addPlayerSelectionsDOM(selection0, selection1, animations) {
