@@ -38,7 +38,7 @@ function prepareDOM() {
   updateGameMessages();
   createDefaultPlayers();
   addControllerButtonsDOM();
-  updateplayerInfoDOM();
+  updatePlayerInfoDOM();
   addPlayerSelectionsDOM();
 }
 //- update DOM functions -//
@@ -64,7 +64,7 @@ function addControllerButtonsDOM() {
   });
 }
 
-function updateplayerInfoDOM() {
+function updatePlayerInfoDOM() {
   playerInfoAreas.forEach(function (area, idx) {
     area.innerHTML = '';
     const player = players[`p${idx}`];
@@ -89,10 +89,7 @@ function showHideMenu() {
 }
 
 function addPlayerSelectionsDOM(selection0, selection1, animations) {
-  game.emojisOnDOM.forEach(function (element) {
-    gameArea.removeChild(element);
-  });
-
+  gameArea.innerHTML = '';
   if (!selection0) selection0 = options[settings.version][0];
   if (!selection1) selection1 = options[settings.version][0];
   var p0Selection = createChoiceElement(selection0, 0, animations || ['ready']);
@@ -136,7 +133,7 @@ async function runResultsAnimations() {
       `${players[game.winner].name} wins!`,
       game.message
     );
-    updateplayerInfoDOM();
+    updatePlayerInfoDOM();
     const winner = Number(game.winner.slice(-1));
     playerInfoAreas.forEach(function (area, idx) {
       let avatar = area.querySelector('img');
@@ -240,7 +237,7 @@ async function handleGameStateClick(id) {
       showHideMenu();
       settings.showMenu = false;
     }
-    updateplayerInfoDOM();
+    updatePlayerInfoDOM();
     addPlayerSelectionsDOM();
   }
 }
