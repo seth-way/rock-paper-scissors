@@ -1,6 +1,10 @@
 :root {
   --nintendo-gray-1: rgb(193, 190, 185);
   --nintendo-gray-2: rgb(145, 139, 146);
+  --gameboy-screen-1: rgb(124, 130, 16);
+  --gameboy-screen-2: rgb(89, 121, 66);
+  --gameboy-screen-3: rgb(57, 89, 74);
+  --gameboy-screen-4: rgb(41, 65, 57);
   --darkest-gray: rgb(111, 105, 112);
   --sky-blue: rgb(84, 148, 254);
   --grass-green: rgb(117, 185, 36);
@@ -52,9 +56,9 @@ h1:hover {
   }
 }
 
-.hide {
+/* .hide {
   animation: 1.5s ease-in-out 1 both hide;
-}
+} */
 /*<><> Console <><>*/
 #console {
   position: relative;
@@ -155,7 +159,7 @@ p {
   width: 25%;
   flex-direction: column;
   justify-content: space-around;
-  z-index: 3;
+  z-index: 6;
   background-color: var(--checker-1);
   background-image: linear-gradient(
       45deg,
@@ -183,6 +187,153 @@ p {
       transform: translateX(110%);
     }
   }
+}
+/* menu area */
+#menu-layer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--grass-green);
+  flex-direction: column;
+  justify-content: space-around;
+  background-color: var(--gameboy-screen-1);
+  filter: brightness(0.9);
+  z-index: 5;
+  transition: all 2s ease-in-out;
+  &.hide {
+    transform: translateY(-110%);
+  }
+}
+
+#menu-layer * {
+  border-color: var(--gameboy-screen-4);
+  color: var(--gameboy-screen-4);
+  background-color: color-mix(in srgb, var(--gameboy-screen-1) 70%, white);
+}
+
+#menu-layer *:focus {
+  outline-style: none;
+  filter: brightness(1.2);
+}
+
+#menu-form {
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+#menu-layer button {
+  height: 2em;
+  aspect-ratio: 3.5/1;
+  border-radius: 5px;
+  border-width: 2px;
+  margin-top: 2%;
+  background-color: color-mix(in srgb, var(--gameboy-screen-1) 70%, white);
+  color: var(--gameboy-screen-4);
+
+  &:hover {
+    filter: brightness(1.1);
+    transform: scale(1);
+  }
+}
+
+.player-info-form {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.player-info-form > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* gap: 2%; */
+  & > label {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 0;
+  }
+  & > input {
+    height: 1.5em;
+  }
+}
+
+.buffer {
+  width: 1em;
+}
+
+#menu-layer .players-count {
+  display: block;
+  border: 2px solid var(--gameboy-screen-4);
+  border-radius: 50%;
+  height: 0.5em;
+  aspect-ratio: 1/1;
+  &:hover {
+    cursor: pointer;
+  }
+  &.selected {
+    background-color: var(--gameboy-screen-2);
+  }
+}
+
+.menu-footer {
+  width: 100%;
+  justify-content: center;
+  gap: 5%;
+  & > fieldset {
+    gap: 0.5em;
+  }
+}
+/* menu dropdowns */
+.dropdown {
+  display: inline-block;
+  position: relative;
+}
+
+.dropdown-featured {
+  border: 2px solid;
+  height: 1.5em;
+  aspect-ratio: 3.5/1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  width: 100%;
+  max-height: 5em;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.dropdown-content > * {
+  display: block;
+  height: 1.5em;
+  aspect-ratio: 3.5/1;
+  font-size: 0.7em;
+  text-align: left;
+  padding-left: 5%;
+  &:hover {
+    cursor: pointer;
+    filter: brightness(1.3);
+  }
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropdown-featured {
+  filter: brightness(1.2);
 }
 
 /* gameplay area */

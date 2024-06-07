@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // <> <> GLOBAL VARIABLES <> <> //
 var options = {
   options3: ['rock', 'paper', 'scissors'],
@@ -16,6 +17,7 @@ var winMessage = {
 };
 var game = createGame();
 var players = createDefaultPlayers();
+var playerUpdates = {};
 // <> <> DOM VARIABLES <> <> //
 //- buttons -//
 var buttonsLayer = document.querySelector('#buttons-layer');
@@ -27,19 +29,33 @@ var playerInfoAreas = document.querySelectorAll('.player-info');
 var gameArea = document.querySelector('#game');
 var gameHeading = document.querySelector('#sky').querySelector('h3');
 var gameInfo = document.querySelector('#sky').querySelector('p');
+//- form elements -//
+var avatarLists = document.querySelectorAll('.dropdown-content');
+var featuredAvatars = {
+  p0: document.querySelector('#avatar-featured-0'),
+  p1: document.querySelector('#avatar-featured-1'),
+};
+var optionsMenu = document.querySelector('#menu-layer');
 // <> <> EVENT LISTENERS <> <> //
 //- load -//
 window.addEventListener('load', prepareDOM);
 //- click -//
 buttonsLayer.addEventListener('click', handleButtonClick);
+//- options menu -//
+optionsMenu.addEventListener('click', handleOptionsClick);
+// optionsMenu.addEventListener('change', handleOptionsChange);
 // <> <> FUNCTIONS <> <> //
 //- prepare page functions -//
 function prepareDOM() {
+  addAvatarOptionsToMenu();
   updateGameMessages();
   createDefaultPlayers();
   addControllerButtonsDOM();
   updatePlayerInfoDOM();
   addPlayerSelectionsDOM();
+  // delete after building menu;
+  // settings.showMenu = !settings.showMenu;
+  // showHideMenu();
 }
 //- update DOM functions -//
 function addControllerButtonsDOM() {
@@ -86,6 +102,7 @@ function showHideMenu() {
   game.emojisOnDOM.forEach(function (emoji) {
     emoji.classList.toggle('fade-out');
   });
+  optionsMenu.classList.toggle('hide');
 }
 
 function addPlayerSelectionsDOM(selection0, selection1, animations) {
@@ -241,6 +258,37 @@ async function handleGameStateClick(id) {
     addPlayerSelectionsDOM();
   }
 }
+//- options menu handler functions -//
+function handleOptionsClick(e) {
+  e.preventDefault();
+  const id = e.target.id;
+  console.log(id);
+  if (id) {
+    if (id.startsWith('name') || id.startsWith('avatar-featured')) return;
+    if (id.startsWith('new-avatar')) {
+      const player = id.slice(-2);
+      if (!playerUpdates[player]) playerUpdates[player] = {};
+      playerUpdates[player].avatar = createAvatar(e.target.innerText);
+      featuredAvatars[player].innerText = e.target.innerText;
+    } else if (id.startsWith('players-count')) {
+      return;
+    } else {
+      if (id === 'update-options') {
+        if (optionsMenu['name-0'].value) {
+          playerUpdates.p0.name = optionsMenu['name-0'].value.slice(0, 20);
+        }
+        if (optionsMenu['name-1'].value) {
+          playerUpdates.p1.name = optionsMenu['name-1'].value.slice(0, 20);
+        }
+        if (Object.keys(playerUpdates).length) {
+          updatePlayers(playerUpdates);
+        }
+      }
+      settings.showMenu = !settings.showMenu;
+      showHideMenu();
+    }
+  }
+}
 //- game logic functions -//
 function createDefaultPlayers() {
   return {
@@ -255,6 +303,14 @@ function createPlayer(name = 'Hero', avatar = createAvatar(), wins = 0) {
     avatar,
     wins,
   };
+}
+
+function updatePlayers(updates) {
+  if (updates.p0) players.p0 = { ...players.p0, ...updates.p0 };
+  if (updates.p1) players.p1 = { ...players.p1, ...updates.p1 };
+  players.p0.wins = 0;
+  players.p1.wins = 0;
+  updatePlayerInfoDOM();
 }
 
 function createGame() {
@@ -306,6 +362,19 @@ function determineOutcome(choice0, choice1) {
   }
 }
 
+function addAvatarOptionsToMenu() {
+  featuredAvatars.p0.innerText = 'Default';
+  featuredAvatars.p1.innerText = 'Robot';
+  avatarLists.forEach(function (element, idx) {
+    avatars.forEach(function (avatar) {
+      const avatarOption = document.createElement('div');
+      avatarOption.classList.add('avatar-option');
+      avatarOption.innerText = avatar;
+      avatarOption.id = `new-avatar-p${idx}`;
+      element.appendChild(avatarOption);
+    });
+  });
+}
 //- other functions -//
 function pauseForCSSTransition(miliseconds) {
   return new Promise(resolve =>
