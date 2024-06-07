@@ -181,8 +181,8 @@ p {
   justify-content: center;
   margin-bottom: 3%;
   background: linear-gradient(225deg,
-    var(--nintendo-gray-2) 50%,
-    #4A4747 100%
+    rgb(80,80,80) 30%,
+    rgb(55,55,55) 100%
   );
   width: 70%;
   height: 85%;
