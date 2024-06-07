@@ -23,6 +23,9 @@ var playerUpdates = {};
 var buttonsLayer = document.querySelector('#buttons-layer');
 var buttonGroupB = document.querySelectorAll('.btn-grp-b');
 var buttonGroupC = document.querySelectorAll('.btn-grp-c');
+var menuButton = document.querySelector('#menu');
+var modeButton = document.querySelector('#mode');
+var resetButton = document.querySelector('#reset');
 //- containers -//
 var device = document.querySelector('#console');
 var playerInfoAreas = document.querySelectorAll('.player-info');
@@ -51,11 +54,23 @@ function prepareDOM() {
   updateGameMessages();
   createDefaultPlayers();
   addControllerButtonsDOM();
+  togglePlayerButtons(1);
   updatePlayerInfoDOM();
   addPlayerSelectionsDOM();
-  // delete after building menu;
-  // settings.showMenu = !settings.showMenu;
-  // showHideMenu();
+}
+
+function addAvatarOptionsToMenu() {
+  featuredAvatars.p0.innerText = 'Default';
+  featuredAvatars.p1.innerText = 'Robot';
+  avatarLists.forEach(function (element, idx) {
+    avatars.forEach(function (avatar) {
+      const avatarOption = document.createElement('div');
+      avatarOption.classList.add('avatar-option');
+      avatarOption.innerText = avatar;
+      avatarOption.id = `new-avatar-p${idx}`;
+      element.appendChild(avatarOption);
+    });
+  });
 }
 //- update DOM functions -//
 function addControllerButtonsDOM() {
@@ -67,7 +82,6 @@ function addControllerButtonsDOM() {
       buttonElement.id = `${option}-${idx}`;
       if (idx === 1) {
         buttonElement.classList.add('right-side');
-        if (settings.onePlayer) buttonElement.classList.add('disable');
       }
       const buttonImage = createChoiceElement(option, idx);
       buttonElement.appendChild(buttonImage);
@@ -78,6 +92,20 @@ function addControllerButtonsDOM() {
       }
     });
   });
+}
+
+function togglePlayerButtons(player) {
+  var buttonsB = buttonGroupB[player].querySelectorAll('button');
+  var buttonsC = buttonGroupC[player].querySelectorAll('button');
+  [...buttonsB, ...buttonsC].forEach(function (button) {
+    button.classList.toggle('disable');
+  });
+}
+
+function toggleOtherButtons() {
+  menuButton.classList.toggle('disable');
+  modeButton.classList.toggle('disable');
+  resetButton.classList.toggle('disable');
 }
 
 function updatePlayerInfoDOM() {
@@ -170,6 +198,11 @@ async function runResultsAnimations() {
     await pauseForCSSTransition(1.5);
   }
   await updateGameMessages();
+
+  togglePlayerButtons(0);
+  if (!settings.onePlayer) togglePlayerButtons(1);
+  toggleOtherButtons();
+
   game = createGame();
   addPlayerSelectionsDOM();
 }
@@ -217,6 +250,9 @@ async function handleUserChoiceClick(id) {
   if (player === 1 && settings.onePlayer) return;
   if (game.selected[`p${player}`]) return;
 
+  togglePlayerButtons(player);
+  toggleOtherButtons();
+
   const choice = id.slice(0, id.length - 2);
   game.selected[`p${player}`] = choice;
 
@@ -244,6 +280,7 @@ async function handleGameStateClick(id) {
     device.classList.add('flip');
     await pauseForCSSTransition(0.5);
     addControllerButtonsDOM();
+    if (settings.onePlayer) togglePlayerButtons(1);
     await pauseForCSSTransition(0.5);
     device.classList.remove('flip');
   } else {
@@ -362,19 +399,6 @@ function determineOutcome(choice0, choice1) {
   }
 }
 
-function addAvatarOptionsToMenu() {
-  featuredAvatars.p0.innerText = 'Default';
-  featuredAvatars.p1.innerText = 'Robot';
-  avatarLists.forEach(function (element, idx) {
-    avatars.forEach(function (avatar) {
-      const avatarOption = document.createElement('div');
-      avatarOption.classList.add('avatar-option');
-      avatarOption.innerText = avatar;
-      avatarOption.id = `new-avatar-p${idx}`;
-      element.appendChild(avatarOption);
-    });
-  });
-}
 //- other functions -//
 function pauseForCSSTransition(miliseconds) {
   return new Promise(resolve =>

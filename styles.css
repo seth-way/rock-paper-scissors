@@ -88,7 +88,7 @@ button,
     filter: brightness(150%);
   }
   &.disable {
-    filter: grayscale(0.5);
+    filter: grayscale(0.6);
     mouse-events: none;
     &:hover {
       cursor: not-allowed;
