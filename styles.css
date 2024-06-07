@@ -5,13 +5,17 @@
   --gameboy-screen-2: rgb(89, 121, 66);
   --gameboy-screen-3: rgb(57, 89, 74);
   --gameboy-screen-4: rgb(41, 65, 57);
-  --darkest-gray: rgb(111, 105, 112);
+  --color-rock: rgba(255, 0, 0, 1);
+  --color-paper: rgba(255, 255, 0, 1);
+  --color-scissors: rgba(0, 0, 255, 1);
+  --color-spock: rgba(255, 192, 203, 1);
+  --color-lizard: rgba(0, 128, 0, 1);
+  --darkest-gray: rgb(75, 75, 75);
   --sky-blue: rgb(84, 148, 254);
   --grass-green: rgb(117, 185, 36);
   --checker-1: rgb(251, 184, 9);
   --checker-2: rgb(180, 78, 9);
   --custom-border: 3px solid var(--darkest-gray);
-  /* --custom-border: 3px solid color-mix(in srgb, var(--darkest-gray) 50%, black); */
 }
 
 *,
@@ -55,17 +59,14 @@ h1:hover {
     rotate: 365deg;
   }
 }
-
-/* .hide {
-  animation: 1.5s ease-in-out 1 both hide;
-} */
 /*<><> Console <><>*/
 #console {
   position: relative;
   background: linear-gradient(
-    40deg,
-    var(--nintendo-gray-1),
-    rgba(218, 223, 225, 1)
+    200deg,
+    var(--nintendo-gray-1) 0%,
+    var(--nintendo-gray-2) 70%,
+    #5f5b5b 100%
   );
   width: 75%;
   aspect-ratio: 2.2/1;
@@ -78,22 +79,76 @@ h1:hover {
   }
 }
 
+#console::before {
+  content: '';
+  position: absolute;
+  background: color-mix(in srgb, var(--nintendo-gray-2) 65%, black);
+  top: 0;
+  right: 0;
+  width: 101%;
+  height: 103%;
+  border-radius: 30px;
+  transform: translate(-1px, 2px);
+  z-index: -1;
+}
+
 button,
 .clickable {
   transition: all 0.2s ease-in-out;
   border: var(--custom-border);
+  padding: 0;
   &:hover {
     cursor: pointer;
     transform: scale(1.1);
-    filter: brightness(150%);
+  }
+  &:active .button-overlay {
+    transform: translateY(-2px) !important;
   }
   &.disable {
     filter: grayscale(0.6);
     mouse-events: none;
     &:hover {
-      cursor: not-allowed;
+      cursor: default;
       transform: none;
     }
+  }
+}
+
+.button-overlay {
+  display: block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  transform: translate(2px, -4px);
+}
+
+div > .button-overlay {
+  border-radius: 10px;
+  background: var(--nintendo-gray-2);
+}
+
+#mode > .button-overlay {
+  background: var(--color-rock);
+  transform: translate(2px, -3px);
+}
+
+button > .button-overlay {
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  &.btn-rock {
+    background: var(--color-rock);
+  }
+  &.btn-paper {
+    background: var(--color-paper);
+  }
+  &.btn-scissors {
+    background: var(--color-scissors);
+  }
+  &.btn-spock {
+    background: var(--color-spock);
+  }
+  &.btn-lizard {
+    background: var(--color-lizard);
   }
 }
 
@@ -125,7 +180,10 @@ p {
 #screen-frame.flex-center {
   justify-content: center;
   margin-bottom: 3%;
-  background: var(--nintendo-gray-2);
+  background: linear-gradient(225deg,
+    var(--nintendo-gray-2) 50%,
+    #4A4747 100%
+  );
   width: 70%;
   height: 85%;
   border-radius: 20px;
@@ -444,7 +502,7 @@ button {
 .top-btn {
   width: 100%;
   aspect-ratio: 3.5/1;
-  background: var(--nintendo-gray-2);
+  background: color-mix(in srgb, var(--nintendo-gray-2) 35%, black);
   border: var(--custom-border);
   border-radius: 10px;
 }
@@ -465,20 +523,24 @@ button {
 
 .btn-grp-b > button {
   height: 40%;
-  background: yellow;
-  &:first-child {
+  &.btn-rock {
     align-self: flex-start;
-    background: red;
+    background-color: var(--color-rock);
+    background: color-mix(in srgb, var(--color-rock) 65%, black);
   }
-  &:last-child {
+  &.btn-paper {
+    background: color-mix(in srgb, var(--color-paper) 65%, black);
+  }
+  &.btn-scissors {
     align-self: flex-end;
-    background: blue;
+    background-color: var(--color-scissors);
+    background: color-mix(in srgb, var(--color-scissors) 65%, black);
   }
   &.right-side {
-    &:first-child {
+    &.btn-rock {
       align-self: flex-end;
     }
-    &:last-child {
+    &.btn-scissors {
       align-self: flex-start;
     }
   }
@@ -498,22 +560,23 @@ button {
 .btn-grp-c > button {
   pointer-events: auto;
   height: 32%;
-  background: green;
-  &:first-child {
+  &.btn-spock {
     margin-left: 46%;
+    background: color-mix(in srgb, var(--color-spock) 65%, black);
   }
-  &:last-child {
+  &.btn-lizard {
     margin-right: 46%;
-    background: pink;
+    background: color-mix(in srgb, var(--color-lizard) 65%, black);
   }
   &.right-side {
-    &:first-child {
+    &.btn-spock {
       margin-left: -46%;
     }
-    &:last-child {
+    &.btn-lizard {
       margin-right: -46%;
     }
   }
+  backdrop-filter: brightness(70%);
 }
 /* d-pad */
 #d-pad.flex-center {
@@ -521,8 +584,10 @@ button {
   aspect-ratio: 1/1;
   margin: 0 27% 0 0;
   aspect-ratio: 1/1;
-  background: var(--nintendo-gray-2);
-  filter: brightness(7rm index0%);
+  background: linear-gradient(225deg,
+    var(--nintendo-gray-2) 50%,
+    #4A4747 100%
+  );
   border: var(--custom-border);
   border-radius: 50%;
   flex-direction: column;
@@ -541,7 +606,7 @@ button {
 .d-pad-btn {
   aspect-ratio: 1/1;
   background: var(--nintendo-gray-2);
-  filter: brightness(60%);
+  filter: brightness(110%);
   border: none;
 }
 
@@ -569,7 +634,7 @@ button {
   height: 1em;
   aspect-ratio: 1/1;
   border-radius: 50%;
-  background: red;
+  background: color-mix(in srgb, var(--color-rock) 65%, black);
   border: 2px black solid;
 }
 /*<><> Emojis <><>*/

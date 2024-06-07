@@ -80,11 +80,15 @@ function addControllerButtonsDOM() {
     options[settings.version].forEach(function (option, optionIdx) {
       const buttonElement = document.createElement('button');
       buttonElement.id = `${option}-${idx}`;
+      buttonElement.classList.add(`btn-${option}`);
       if (idx === 1) {
         buttonElement.classList.add('right-side');
       }
+      const buttonOverlay = document.createElement('span');
+      buttonOverlay.classList.add('button-overlay', `btn-${option}`);
+      buttonElement.appendChild(buttonOverlay);
       const buttonImage = createChoiceElement(option, idx);
-      buttonElement.appendChild(buttonImage);
+      buttonOverlay.appendChild(buttonImage);
       if (optionIdx < 3) {
         buttonGroup.appendChild(buttonElement);
       } else {
@@ -232,8 +236,11 @@ function handleButtonClick(e) {
   if (e.target.tagName === 'IMG' || e.target.tagName === 'BUTTON') {
     targetID = e.target.closest('button').id;
     handleUserChoiceClick(targetID);
-  } else if (e.target.classList.contains('clickable')) {
-    targetID = e.target.id;
+  } else if (
+    e.target.classList.contains('clickable') ||
+    e.target.classList.contains('button-overlay')
+  ) {
+    targetID = e.target.closest('div').id;
     if (targetID.startsWith('d-')) {
       handleDPadClick(targetID);
     } else {
