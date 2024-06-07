@@ -1,4 +1,6 @@
-# ROCK · PAPER · SCISSORS
+# 🪨 📰 ✂️ [ROCK · PAPER · SCISSORS](https://seth-way.github.io/rock-paper-scissors/) 🪨 📰 ✂️
+
+☝️ Click the link for a working deployment of this repo.
 
 ### Abstract:
 
