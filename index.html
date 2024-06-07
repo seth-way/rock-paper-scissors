@@ -63,6 +63,59 @@
         <div id="screen-frame" class="flex-center">
           <box id="screen">
             <div id="screen-background">
+              <form id="menu-layer" class="hide flex-center">
+                <fieldset id="menu-form" class="flex-center">
+                  <legend>Options</legend>
+                  <!-- <div class="flex-center"> -->
+                  <fieldset class="player-info-form">
+                    <legend>Player 1</legend>
+                    <span>
+                      <label for="name-0">Name</label>
+                      <input type="text" id="name-0" name="name-0" /></span
+                    ><span class="buffer"></span
+                    ><span>
+                      <label for="avatar-0">Avatar</label>
+                      <div class="dropdown" id="avatar-0" name="avatar-0">
+                        <div class="dropdown-featured" id="avatar-featured-0"></div>
+                        <div
+                          id="avatar-list-0"
+                          class="dropdown-content"
+                        ></div></div
+                    ></span>
+                  </fieldset>
+                  <fieldset class="player-info-form">
+                    <legend>Player 2</legend>
+                    <span
+                      ><label for="name-1">Name</label>
+                      <input type="text" id="name-1" name="name-1" /></span
+                    ><span
+                      ><span class="buffer"></span>
+                      <label for="avatar-1">Avatar</label>
+                      <div class="dropdown" id="avatar-1" name="avatar-1">
+                        <div class="dropdown-featured" id="avatar-featured-1"></div>
+                        <div
+                          id="avatar-list-1"
+                          class="dropdown-content"
+                        ></div></div
+                    ></span>
+                  </fieldset>
+                  <!-- </div> -->
+                  <div class="menu-footer flex-center">
+                    <fieldset class="flex-center">
+                      <legend>Players</legend>
+                      <span>1p</span>
+                      <span
+                        class="players-count selected"
+                        id="players-count-1"
+                      ></span>
+                      <span>2p</span>
+                      <span class="players-count" id="players-count-2"></span>
+                    </fieldset>
+                    <button id="update-options">Update</button
+                    ><button id="exit-options">Exit</button>
+                  </div>
+                </fieldset>
+              </form>
               <div id="sky" class="flex-center">
                 <h3></h3>
                 <p></p>
@@ -76,6 +129,7 @@
         </div>
       </div>
     </main>
-    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript" src="src/main.js"></script>
+    <script type="text/javascript" src="src/data.js"></script>
   </body>
 </html>
