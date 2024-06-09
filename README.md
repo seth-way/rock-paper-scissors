@@ -60,3 +60,7 @@ This app was built by [Seth Way](https://github.com/seth-way).
 - This project challenged my understanding of CSS animations & async delays. It was difficult, but rewarding to create a seamless UX, while keeping possible bugs out of the DOM during delays.
 - The 'console' was a complicated & layered element that required carefull planning and manipulation to create. Parts needed to be hidden and cursor events disabled as necessary to elimate unwanted DOM activities.
 - This is the most complex CSS I have built to date & required research in CSS variables, color blending, @keyframe animations, transitions, and layering through absolute-positioning. I'm very pleased with the final product.
+
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
