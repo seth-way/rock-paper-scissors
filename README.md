@@ -22,10 +22,25 @@
 ### Preview of App:
 
 [//]: <> (Provide ONE gif or screenshot of your application - choose the "coolest" piece of functionality to show off.)
+##### This app features an intuitive and sleek UI for fun & engaging gameplay.
+
+![gameplay-demo](assets/docs/gameplay.gif)
+
+##### Play Classic Rock, Paper, or Scissors - OR - Switch to 'Advanced Mode' for more choices & outcomes.
+
+![advanced-mode-demo](assets/docs/difficult-mode.gif)
+
+##### Make changes in the 'User Menu' for custom player names, avatars, and even switch to 2 Player Mode.
+
+![user-menu-demo](assets/docs/menu-options.gif)
 
 ### Context:
 
 [//]: <> (Give some context for the project here. How long did you have to work on it? How far into the Turing program are you?)
+
+- This app was built as the final Mod 1 solo project in Week 5/6 of Turing's FE Software Development Bootcamp.
+- It is meant to demonstrate web-dev skills in JS, HTML, CSS & DOM manipulation.
+- It took roughly 6 days or 20+ hours to complete.
 
 ### Contributors:
 
@@ -42,3 +57,6 @@ This app was built by [Seth Way](https://github.com/seth-way).
 ### Wins + Challenges:
 
 [//]: <> (What are 2-3 wins you have from this project? What were some challenges you faced - and how did you get over them?)
+- This project challenged my understanding of CSS animations & async delays. It was difficult, but rewarding to create a seamless UX, while keeping possible bugs out of the DOM during delays.
+- The 'console' was a complicated & layered element that required carefull planning and manipulation to create. Parts needed to be hidden and cursor events disabled as necessary to elimate unwanted DOM activities.
+- This is the most complex CSS I have built to date & required research in CSS variables, color blending, @keyframe animations, transitions, and layering through absolute-positioning. I'm very pleased with the final product.
