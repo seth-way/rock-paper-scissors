@@ -6,7 +6,7 @@
 
 [//]: <> (Briefly describe what you built and its features. What problem is the app solving? How does this application solve that problem?)
 
-- This project will be a learning tool to demonstrate my understanding of writing DRY JavaScript, properly utilizing event delegation, and utilizing CSS to create a clean and intuitive user experience.
+- This project will be a learning tool to demonstrate my understanding of writing DRY JavaScript, properly utilizing event delegation & utilizing CSS to create a clean & intuitive user experience.
 
 - This app will allow a user to play a fun & interactive game of Rock, Paper, Scissors.
 
@@ -22,7 +22,7 @@
 ### Preview of App:
 
 [//]: <> (Provide ONE gif or screenshot of your application - choose the "coolest" piece of functionality to show off.)
-##### This app features an intuitive and sleek UI for fun & engaging gameplay.
+##### This app features an intuitive & sleek UI for fun & engaging gameplay.
 
 <picture>![gameplay-demo](assets/docs/gameplay.gif)</picture>
 
@@ -30,7 +30,7 @@
 
 <picture>![advanced-mode-demo](assets/docs/difficult-mode.gif)</picture>
 
-##### Make changes in the 'User Menu' for custom player names, avatars, and even switch to 2 Player Mode.
+##### Make changes in the 'User Menu' for custom player names, avatars & even switch to 2 Player Mode.
 
 <picture>![user-menu-demo](assets/docs/menu-options.gif)</picture>
 
@@ -52,14 +52,14 @@ This app was built by [Seth Way](https://github.com/seth-way).
 
 [//]: <> (What were the learning goals of this project? What tech did you work with?)
 
-- This project will reinforce my learning of Javascript, HTML, & CSS.
+- This project will reinforce my learning of Javascript, HTML & CSS.
 
 ### Wins + Challenges:
 
 [//]: <> (What are 2-3 wins you have from this project? What were some challenges you faced - and how did you get over them?)
 - This project challenged my understanding of CSS animations & async delays. It was difficult, but rewarding to create a seamless UX, while keeping possible bugs out of the DOM during delays.
-- The 'console' was a complicated & layered element that required carefull planning and manipulation to create. Parts needed to be hidden and cursor events disabled as necessary to elimate unwanted DOM activities.
-- This is the most complex CSS I have built to date & required research in CSS variables, color blending, @keyframe animations, transitions, and layering through absolute-positioning. I'm very pleased with the final product.
+- The 'console' was a complicated & layered element that required carefull planning & manipulation to create. Parts needed to be hidden & cursor events disabled as necessary to elimate unwanted DOM activities.
+- This is the most complex CSS I have built to date & required research in CSS variables, color blending, @keyframe animations, transitions & layering through absolute-positioning. I'm very pleased with the final product.
 - It took time to build the layout of this app, but the planning payed off & the final result was very close to the original mockup.
 <img src="assets/docs/wireframe.png" alt="wireframe mockup for app" width=50%>
 
