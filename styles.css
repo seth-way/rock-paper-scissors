@@ -644,7 +644,7 @@ button {
 .avatar {
   height: 30%;
   transition: all 1s ease-in-out;
-  &:hover {
+  &:hover, &.wiggle {
     scale: 1.1;
     animation: wiggle 2s linear infinite alternate;
   }

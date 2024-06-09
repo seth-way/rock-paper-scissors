@@ -18,7 +18,7 @@ var winMessage = {
 var game = createGame();
 var players = createDefaultPlayers();
 var gameUpdates = {};
-var playerUpdates = {};
+var playerUpdates = { p0: {}, p1: {} };
 // <> <> DOM VARIABLES <> <> //
 //- buttons -//
 var buttonsLayer = document.querySelector('#buttons-layer');
@@ -56,7 +56,7 @@ function prepareDOM() {
   updateGameMessages();
   createDefaultPlayers();
   addControllerButtonsDOM();
-  togglePlayerButtons(1);
+  toggleButtonsDisabled(1);
   updatePlayerInfoDOM();
   addPlayerSelectionsDOM();
 }
@@ -100,18 +100,18 @@ function addControllerButtonsDOM() {
   });
 }
 
-function togglePlayerButtons(player) {
-  var buttonsB = buttonGroupB[player].querySelectorAll('button');
-  var buttonsC = buttonGroupC[player].querySelectorAll('button');
-  [...buttonsB, ...buttonsC].forEach(function (button) {
-    button.classList.toggle('disable');
-  });
-}
-
-function toggleOtherButtons() {
-  menuButton.classList.toggle('disable');
-  modeButton.classList.toggle('disable');
-  resetButton.classList.toggle('disable');
+function toggleButtonsDisabled(player) {
+  if (player !== undefined) {
+    var buttonsB = buttonGroupB[player].querySelectorAll('button');
+    var buttonsC = buttonGroupC[player].querySelectorAll('button');
+    [...buttonsB, ...buttonsC].forEach(function (button) {
+      button.classList.toggle('disable');
+    });
+  } else {
+    menuButton.classList.toggle('disable');
+    modeButton.classList.toggle('disable');
+    resetButton.classList.toggle('disable');
+  }
 }
 
 function updatePlayerInfoDOM() {
@@ -220,9 +220,9 @@ async function runResultsAnimations() {
   }
   await updateGameMessages();
 
-  togglePlayerButtons(0);
-  if (!settings.isOnePlayerMode) togglePlayerButtons(1);
-  toggleOtherButtons();
+  toggleButtonsDisabled(0);
+  if (!settings.isOnePlayerMode) toggleButtonsDisabled(1);
+  toggleButtonsDisabled();
 
   game = createGame();
   addPlayerSelectionsDOM();
@@ -240,7 +240,6 @@ function createChoiceElement(choice, player, animations) {
 
 function createAvatar(avatarType = 'default') {
   const avatar = document.createElement('img');
-  // avatar.type = avatarType;
   avatar.classList.add('avatar');
   avatar.src = `assets/avatars/${avatarType}.svg`;
   avatar.alt = `${avatarType} avatar emoji`;
@@ -274,21 +273,33 @@ async function handleUserChoiceClick(id) {
   if (player === 1 && settings.isOnePlayerMode) return;
   if (game.selected[`p${player}`]) return;
 
-  togglePlayerButtons(player);
-  if (!menuButton.classList.contains('disable')) toggleOtherButtons();
+  toggleButtonsDisabled(player);
+  if (!menuButton.classList.contains('disable')) toggleButtonsDisabled();
 
   const choice = id.slice(0, id.length - 2);
   game.selected[`p${player}`] = choice;
+  game = assessGameCompletion(game, settings);
 
-  if (assessGameCompletion()) {
-    determineOutcome(game.selected.p0, game.selected.p1);
+  if (game.isCompleted) {
+    game = determineOutcome(game);
+    if (game.winner) players[game.winner].wins += 1;
     await updateGameMessages('Get Ready...');
     await runBattleAnimations();
   }
 }
 
 function handleDPadClick(id) {
-  console.log('d-pad clicked.', id);
+  let reaction = 'wiggle';
+  if (id.endsWith('up')) reaction = 'victory';
+  if (id.endsWith('down')) reaction = 'defeat';
+
+  playerInfoAreas.forEach(function (area) {
+    const avatar = area.querySelector('img');
+    avatar.classList.add(reaction);
+    setTimeout(function () {
+      avatar.classList.remove(reaction);
+    }, 3000);
+  });
 }
 
 async function handleGameStateClick(id) {
@@ -304,7 +315,7 @@ async function handleGameStateClick(id) {
     device.classList.add('flip');
     await pauseForCSSTransition(0.5);
     addControllerButtonsDOM();
-    if (settings.isOnePlayerMode) togglePlayerButtons(1);
+    if (settings.isOnePlayerMode) toggleButtonsDisabled(1);
     await pauseForCSSTransition(0.5);
     device.classList.remove('flip');
   } else {
@@ -323,12 +334,10 @@ async function handleGameStateClick(id) {
 function handleOptionsClick(e) {
   e.preventDefault();
   const id = e.target.id;
-  console.log(id);
   if (id) {
     if (id.startsWith('name') || id.startsWith('avatar-featured')) return;
     if (id.startsWith('new-avatar')) {
       const player = id.slice(-2);
-      if (!playerUpdates[player]) playerUpdates[player] = {};
       playerUpdates[player].avatar = createAvatar(e.target.innerText);
       featuredAvatars[player].innerText = e.target.innerText;
     } else if (id.startsWith('players-count')) {
@@ -343,12 +352,17 @@ function handleOptionsClick(e) {
         if (optionsMenu['name-1'].value) {
           playerUpdates.p1.name = optionsMenu['name-1'].value.slice(0, 20);
         }
-        if (Object.keys(playerUpdates).length) {
-          updatePlayers(playerUpdates);
+        if (
+          Object.keys(playerUpdates.p0).length ||
+          Object.keys(playerUpdates.p1).length
+        ) {
+          players = updatePlayers(playerUpdates, players);
+          playerUpdates = { p0: {}, p1: {} };
+          updatePlayerInfoDOM();
         }
         if (typeof gameUpdates.isOnePlayerMode === 'boolean') {
           if (gameUpdates.isOnePlayerMode !== settings.isOnePlayerMode) {
-            togglePlayerButtons(1);
+            toggleButtonsDisabled(1);
           }
           settings.isOnePlayerMode = gameUpdates.isOnePlayerMode;
         }
@@ -374,12 +388,13 @@ function createPlayer(name = 'Hero', avatar = createAvatar(), wins = 0) {
   };
 }
 
-function updatePlayers(updates) {
-  if (updates.p0) players.p0 = { ...players.p0, ...updates.p0 };
-  if (updates.p1) players.p1 = { ...players.p1, ...updates.p1 };
-  players.p0.wins = 0;
-  players.p1.wins = 0;
-  updatePlayerInfoDOM();
+function updatePlayers(updates, previous) {
+  var updatedPlayers = { ...previous };
+  if (updates.p0) updatedPlayers.p0 = { ...updatedPlayers.p0, ...updates.p0 };
+  if (updates.p1) updatedPlayers.p1 = { ...updatedPlayers.p1, ...updates.p1 };
+  updatedPlayers.p0.wins = 0;
+  updatedPlayers.p1.wins = 0;
+  return updatedPlayers;
 }
 
 function createGame() {
@@ -391,24 +406,27 @@ function createGame() {
       p1: null,
     },
     emojisOnDOM,
+    isCompleted: false,
     winner: null,
     message: null,
   };
 }
 
-function assessGameCompletion() {
-  if (game.selected.p0) {
-    if (game.selected.p1) {
-      return true;
+function assessGameCompletion(gameState, gameSettings) {
+  const results = { ...gameState };
+
+  if (results.selected.p0) {
+    if (results.selected.p1) {
+      results.isCompleted = true;
     }
 
-    if (settings.isOnePlayerMode) {
-      game.selected.p1 = getRandomChoice();
-      return true;
+    if (gameSettings.isOnePlayerMode) {
+      results.selected.p1 = getRandomChoice();
+      results.isCompleted = true;
     }
   }
 
-  return false;
+  return results;
 }
 
 function getRandomChoice() {
@@ -416,19 +434,23 @@ function getRandomChoice() {
   return choices[Math.floor(Math.random() * choices.length)];
 }
 
-function determineOutcome(choice0, choice1) {
-  if (game.selected.p0 === game.selected.p1) {
-    game.message = "It's a Draw!";
+function determineOutcome(gameState) {
+  const results = { ...gameState };
+  const choice0 = results.selected.p0;
+  const choice1 = results.selected.p0;
+  if (gameState.selected.p0 === gameState.selected.p1) {
+    results.message = "It's a Draw!";
   } else {
-    game.message = winMessage[choice0][choice1];
-    if (game.message) {
-      game.winner = 'p0';
+    results.message = winMessage[choice0][choice1];
+    if (results.message) {
+      results.winner = 'p0';
     } else {
-      game.message = winMessage[choice1][choice0];
-      game.winner = 'p1';
+      results.message = winMessage[choice1][choice0];
+      results.winner = 'p1';
     }
-    players[game.winner].wins += 1;
   }
+
+  return results;
 }
 
 //- other functions -//
