@@ -24,15 +24,15 @@
 [//]: <> (Provide ONE gif or screenshot of your application - choose the "coolest" piece of functionality to show off.)
 ##### This app features an intuitive and sleek UI for fun & engaging gameplay.
 
-![gameplay-demo](assets/docs/gameplay.gif)
+<picture>![gameplay-demo](assets/docs/gameplay.gif)</picture>
 
 ##### Play Classic Rock, Paper, or Scissors - OR - Switch to 'Advanced Mode' for more choices & outcomes.
 
-![advanced-mode-demo](assets/docs/difficult-mode.gif)
+<picture>![advanced-mode-demo](assets/docs/difficult-mode.gif)</picture>
 
 ##### Make changes in the 'User Menu' for custom player names, avatars, and even switch to 2 Player Mode.
 
-![user-menu-demo](assets/docs/menu-options.gif)
+<picture>![user-menu-demo](assets/docs/menu-options.gif)</picture>
 
 ### Context:
 
@@ -60,7 +60,9 @@ This app was built by [Seth Way](https://github.com/seth-way).
 - This project challenged my understanding of CSS animations & async delays. It was difficult, but rewarding to create a seamless UX, while keeping possible bugs out of the DOM during delays.
 - The 'console' was a complicated & layered element that required carefull planning and manipulation to create. Parts needed to be hidden and cursor events disabled as necessary to elimate unwanted DOM activities.
 - This is the most complex CSS I have built to date & required research in CSS variables, color blending, @keyframe animations, transitions, and layering through absolute-positioning. I'm very pleased with the final product.
+- It took time to build the layout of this app, but the planning payed off & the final result was very close to the original mockup.
+<img src="assets/docs/wireframe.png" alt="wireframe mockup for app" width=50%>
 
-![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
-![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+<picture>![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)</picture>
+<picture>![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)</picture>
+<picture>![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)</picture>
