@@ -4,7 +4,7 @@ var options = {
   options3: ['rock', 'paper', 'scissors'],
   options5: ['rock', 'paper', 'scissors', 'spock', 'lizard'],
 };
-var settings = { showMenu: false, version: 'options3', onePlayer: true };
+var settings = { showMenu: false, version: 'options3', isOnePlayerMode: true };
 var winMessage = {
   rock: { scissors: 'Rock crushes Scissors', lizard: 'Rock crushes Lizard' },
   paper: { rock: 'Paper covers Rock', spock: 'Paper disproves Spock' },
@@ -17,6 +17,7 @@ var winMessage = {
 };
 var game = createGame();
 var players = createDefaultPlayers();
+var gameUpdates = {};
 var playerUpdates = {};
 // <> <> DOM VARIABLES <> <> //
 //- buttons -//
@@ -39,6 +40,7 @@ var featuredAvatars = {
   p1: document.querySelector('#avatar-featured-1'),
 };
 var optionsMenu = document.querySelector('#menu-layer');
+var playerCountModes = document.querySelectorAll('.players-count');
 // <> <> EVENT LISTENERS <> <> //
 //- load -//
 window.addEventListener('load', prepareDOM);
@@ -127,6 +129,21 @@ function updatePlayerInfoDOM() {
   });
 }
 
+function updatePlayerCountModeDOM(isOnePlayerMode) {
+  function isSelected(isOnePlayer, index) {
+    if (isOnePlayer && index === 0) return true;
+    if (!isOnePlayer && index === 1) return true;
+    return false;
+  }
+  playerCountModes.forEach(function (element, idx) {
+    if (isSelected(isOnePlayerMode, idx)) {
+      element.classList.add('selected');
+    } else {
+      element.classList.remove('selected');
+    }
+  });
+}
+
 function showHideMenu() {
   playerInfoAreas.forEach(function (area) {
     area.classList.toggle('hide');
@@ -204,7 +221,7 @@ async function runResultsAnimations() {
   await updateGameMessages();
 
   togglePlayerButtons(0);
-  if (!settings.onePlayer) togglePlayerButtons(1);
+  if (!settings.isOnePlayerMode) togglePlayerButtons(1);
   toggleOtherButtons();
 
   game = createGame();
@@ -254,11 +271,11 @@ async function handleUserChoiceClick(id) {
 
   const player = Number(id.slice(-1));
 
-  if (player === 1 && settings.onePlayer) return;
+  if (player === 1 && settings.isOnePlayerMode) return;
   if (game.selected[`p${player}`]) return;
 
   togglePlayerButtons(player);
-  toggleOtherButtons();
+  if (!menuButton.classList.contains('disable')) toggleOtherButtons();
 
   const choice = id.slice(0, id.length - 2);
   game.selected[`p${player}`] = choice;
@@ -287,7 +304,7 @@ async function handleGameStateClick(id) {
     device.classList.add('flip');
     await pauseForCSSTransition(0.5);
     addControllerButtonsDOM();
-    if (settings.onePlayer) togglePlayerButtons(1);
+    if (settings.isOnePlayerMode) togglePlayerButtons(1);
     await pauseForCSSTransition(0.5);
     device.classList.remove('flip');
   } else {
@@ -315,7 +332,9 @@ function handleOptionsClick(e) {
       playerUpdates[player].avatar = createAvatar(e.target.innerText);
       featuredAvatars[player].innerText = e.target.innerText;
     } else if (id.startsWith('players-count')) {
-      return;
+      const isOnePlayerMode = id.slice(-1) === '1';
+      gameUpdates.isOnePlayerMode = isOnePlayerMode;
+      updatePlayerCountModeDOM(isOnePlayerMode);
     } else {
       if (id === 'update-options') {
         if (optionsMenu['name-0'].value) {
@@ -326,6 +345,12 @@ function handleOptionsClick(e) {
         }
         if (Object.keys(playerUpdates).length) {
           updatePlayers(playerUpdates);
+        }
+        if (typeof gameUpdates.isOnePlayerMode === 'boolean') {
+          if (gameUpdates.isOnePlayerMode !== settings.isOnePlayerMode) {
+            togglePlayerButtons(1);
+          }
+          settings.isOnePlayerMode = gameUpdates.isOnePlayerMode;
         }
       }
       settings.showMenu = !settings.showMenu;
@@ -377,7 +402,7 @@ function assessGameCompletion() {
       return true;
     }
 
-    if (settings.onePlayer) {
+    if (settings.isOnePlayerMode) {
       game.selected.p1 = getRandomChoice();
       return true;
     }
