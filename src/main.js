@@ -437,7 +437,7 @@ function getRandomChoice() {
 function determineOutcome(gameState) {
   const results = { ...gameState };
   const choice0 = results.selected.p0;
-  const choice1 = results.selected.p0;
+  const choice1 = results.selected.p1;
   if (gameState.selected.p0 === gameState.selected.p1) {
     results.message = "It's a Draw!";
   } else {
