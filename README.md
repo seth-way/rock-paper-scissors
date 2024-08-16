@@ -59,7 +59,7 @@ This app was built by [Seth Way](https://github.com/seth-way).
 [//]: <> (What are 2-3 wins you have from this project? What were some challenges you faced - and how did you get over them?)
 - This project challenged my understanding of CSS animations & async delays. It was difficult, but rewarding to create a seamless UX, while keeping possible bugs out of the DOM during delays.
 - This is the most complex CSS I have built to date & required research in CSS variables, color blending, @keyframe animations, transitions & layering through absolute-positioning. I'm very pleased with the final product.
-- The 'console' was a complicated & layered element that required carefull planning & manipulation to create. Parts needed to be hidden & cursor events disabled as necessary to elimate unwanted DOM activities.
+- The 'console' was a complicated & layered element that required careful planning & manipulation to create. Parts needed to be hidden & cursor events disabled as necessary to eliminate unwanted DOM activities.
 - It took time to build the layout of this app, but the planning payed off & the final result is very close to the original mockup.
 <img src="assets/docs/wireframe.png" alt="wireframe mockup for app" width=50%>
 
